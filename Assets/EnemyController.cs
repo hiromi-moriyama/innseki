@@ -70,7 +70,14 @@ public class EnemyController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            SceneManager.LoadScene(scenename);
+            Debug.Log("Enemy collided with Player");
+            PlayerAttributes.health -= 50;
+            Destroy(gameObject);
+
+            if (PlayerAttributes.health < 1)
+            {
+                SceneManager.LoadScene(scenename);
+            }
         }
     }
 

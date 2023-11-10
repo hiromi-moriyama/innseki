@@ -4,16 +4,15 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float movementSpeed = 2f;
 
     private Rigidbody2D rb;
-
     private Vector2 movementDirection;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent < Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -24,6 +23,6 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.velocity = movementDirection * movementSpeed;
+        rb.velocity = movementDirection.normalized * PlayerAttributes.speed;
     }
 }
