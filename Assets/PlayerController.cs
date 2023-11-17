@@ -25,4 +25,12 @@ public class PlayerController : MonoBehaviour
     {
         rb.velocity = movementDirection.normalized * PlayerAttributes.speed;
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("Player Layer: " + gameObject.layer);
+        Debug.Log("Collision Layer: " + collision.collider.gameObject.layer);
+        Debug.Log(collision.collider.name);
+    }
+
 }
