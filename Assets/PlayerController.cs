@@ -1,63 +1,160 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Vector2 movementDirection;
 
-    // Dash variables
-    public float dashDistance = 2f; // Distance to dash
-    public KeyCode dashKey = KeyCode.LeftShift; // Key to trigger the dash
-    private bool canDash = true; // Flag to check if the player can dash
+    public bool CanDash = true;
+    public bool CanUseBarrier = true;
 
-    // Start is called before the first frame update
+    // Dash variables
+    public float dashDistance = 2f;
+    public KeyCode dashKey = KeyCode.LeftShift;
+    public float dashCooldown = 5f; // Adjust the cooldown duration as needed
+
+    // Barrier variables
+    public float barrierRadius = 2f;
+    public float barrierOuterRadius = 3f; // Adjust the outer radius
+    public KeyCode barrierKey = KeyCode.Tab;
+    public float barrierDuration = 5f; // Adjust the barrier duration
+    public float barrierCooldown = 5f; // Adjust the cooldown duration as needed
+    public LayerMask barrierLayer; // Set this in the inspector to the layers you want the barrier to affect
+    public GameObject barrierPrefab; // Drag and drop a circle sprite prefab for the barrier
+
+    // Speed variable
+    public float speed = 2f;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
     void Update()
     {
+        // Allow movement in all scenes
         movementDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
-        // Check if the player can dash and the dash key is pressed
-        if (canDash && Input.GetKeyDown(dashKey))
+        // Check if the current scene is scene index 4
+        if (SceneManager.GetActiveScene().buildIndex == 4)
         {
-            // Trigger the dash ability
-            Dash();
+            // Allow skill usage only in scene index 4
+            if (CanDash && Input.GetKeyDown(dashKey))
+            {
+                Dash();
+            }
+
+            if (CanUseBarrier && Input.GetKeyDown(barrierKey))
+            {
+                UseBarrier();
+            }
         }
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
-        rb.velocity = movementDirection.normalized * PlayerAttributes.speed;
+        rb.velocity = movementDirection.normalized * speed;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    void Dash()
     {
-        Debug.Log("Player Layer: " + gameObject.layer);
-        Debug.Log("Collision Layer: " + collision.collider.gameObject.layer);
-        Debug.Log(collision.collider.name);
+        // Check if the current scene is scene index 4 before dashing
+        if (SceneManager.GetActiveScene().buildIndex == 4)
+        {
+            // Calculate the dash direction based on the player's input direction
+            Vector3 dashDirection = movementDirection.normalized;
+
+            // Move the player in the dash direction for the dash distance
+            transform.Translate(dashDirection * dashDistance);
+
+            // Disable the ability for a short duration (dashCooldown)
+            StartCoroutine(DisableDash());
+        }
     }
 
-    // Dash ability
-    private void Dash()
+    void UseBarrier()
     {
-        // Apply the dash in the input direction
-        transform.Translate(movementDirection.normalized * dashDistance);
+        // Check if the current scene is scene index 4 before using the barrier
+        if (SceneManager.GetActiveScene().buildIndex == 4)
+        {
+            // Create the barrier as a child of the player
+            GameObject barrier = Instantiate(barrierPrefab, transform.position, Quaternion.identity);
+            barrier.transform.parent = transform;
 
-        // Disable the ability for a short duration (adjust as needed)
-        StartCoroutine(DisableDash());
+            // Set the layer of the barrier to PlayerIgnoreBarrier
+            barrier.layer = LayerMask.NameToLayer("PlayerIgnoreBarrier");
+
+            // Set the scale of the barrier to the outer radius
+            barrier.transform.localScale = new Vector3(barrierOuterRadius * 2, barrierOuterRadius * 2, 1);
+
+            // Enable the script to handle collisions and destruction
+            BarrierScript barrierScript = barrier.AddComponent<BarrierScript>();
+            barrierScript.Initialize(this, barrierDuration);
+
+            // Disable the ability for a short duration (barrierCooldown)
+            StartCoroutine(DisableBarrier(barrier));
+        }
     }
 
-    // Coroutine to disable the dash ability for a short duration
     IEnumerator DisableDash()
     {
-        canDash = false;
-        yield return new WaitForSeconds(1f); // Adjust the duration as needed
-        canDash = true;
+        CanDash = false;
+        yield return new WaitForSeconds(dashCooldown);
+
+        // Reset the dash ability after the cooldown
+        CanDash = true;
+    }
+
+    IEnumerator DisableBarrier(GameObject barrier)
+    {
+        Debug.Log("Barrier activated, current speed: " + rb.velocity.magnitude);
+
+        yield return new WaitForSeconds(barrierCooldown);
+
+        // Destroy the barrier object after the cooldown
+        Destroy(barrier);
+
+        // Disable the ability for a short duration (barrierCooldown)
+        CanUseBarrier = false;
+        Debug.Log("Barrier cooldown, speed after cooldown: " + rb.velocity.magnitude);
+
+        yield return new WaitForSeconds(barrierCooldown);
+
+        // Reset the barrier ability after the cooldown
+        CanUseBarrier = true;
+    }
+
+}
+
+public class BarrierScript : MonoBehaviour
+{
+    private PlayerController playerController;
+    private float barrierDuration;
+
+    public void Initialize(PlayerController playerController, float duration)
+    {
+        this.playerController = playerController;
+        barrierDuration = duration;
+        StartCoroutine(DisableBarrier());
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        // Check if the colliding object is on a layer that the barrier should affect
+        if (playerController.barrierLayer == (playerController.barrierLayer | (1 << other.gameObject.layer)) &&
+            other.gameObject.layer != LayerMask.NameToLayer("PlayerIgnoreBarrier"))
+        {
+            Destroy(other.gameObject);
+        }
+    }
+
+    IEnumerator DisableBarrier()
+    {
+        yield return new WaitForSeconds(barrierDuration);
+
+        // Destroy the barrier object after the duration
+        Destroy(gameObject);
     }
 }

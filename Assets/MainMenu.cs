@@ -6,18 +6,24 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
     // Start is called before the first frame update
-    public void AdventurePlay()
-    {
-        SceneManager.LoadSceneAsync(1);
-    }
 
-    public void ChallengePlay()
+    public void Mainmenu()
+    {
+        SceneManager.LoadScene(1);
+    }
+    public void StageSelect()
     {
         SceneManager.LoadSceneAsync(2);
     }
 
-    public void Mainmenu()
+    public void Stage1()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadSceneAsync(3);
     }
+    public void ChallengePlay()
+    {
+        SceneManager.LoadSceneAsync(4);
+    }
+
+    
 }

@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 5828874794883858333}
   - component: {fileID: 7635228746840373810}
   - component: {fileID: 6973467120193854388}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -136,3 +136,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ecc5afed0a4c8f49929e4366920c3cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CanDash: 1
+  CanUseBarrier: 1
+  dashDistance: 2
+  dashKey: 304
+  dashCooldown: 5
+  barrierRadius: 1
+  barrierOuterRadius: 1
+  barrierKey: 9
+  barrierDuration: 2
+  barrierCooldown: 5
+  barrierLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  barrierPrefab: {fileID: 6246178893805791746, guid: 3efbd9b86d0d4bb409562ebc9e5728fb, type: 3}
+  speed: 2
