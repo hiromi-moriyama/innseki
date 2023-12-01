@@ -11,23 +11,14 @@ public class DashSkill : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            PlayerController playerController = other.GetComponent<PlayerController>();
+            // Debug log to verify item pickup
+            Debug.Log("Item picked up!");
 
-            if (playerController != null)
-            {
-                // Debug log to verify item pickup
-                Debug.Log("Item picked up!");
+            // Destroy the item
+            Destroy(gameObject);
 
-                // Destroy the item
-                Destroy(gameObject);
-
-                // Load the next scene
-                SceneManager.LoadSceneAsync(1);
-
-                // Set CanDash and CanUseBarrier to true in the PlayerController script
-                playerController.CanDash = true;
-                playerController.CanUseBarrier = true;
-            }
+            // Load the next scene
+            SceneManager.LoadSceneAsync(1);
         }
     }
 

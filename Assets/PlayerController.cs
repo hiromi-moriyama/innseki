@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Vector2 movementDirection;
+    private Animator animator;
 
     public bool CanDash = true;
     public bool CanUseBarrier = true;
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -80,7 +82,10 @@ public class PlayerController : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex == 4)
         {
             // Create the barrier as a child of the player
-            GameObject barrier = Instantiate(barrierPrefab, transform.position, Quaternion.identity);
+            Vector3 barrierOffset = new Vector3(0f, 1.5f, 0f);
+
+            // Create the barrier at the player's position with the offset
+            GameObject barrier = Instantiate(barrierPrefab, transform.position + barrierOffset, Quaternion.identity);
             barrier.transform.parent = transform;
 
             // Set the layer of the barrier to PlayerIgnoreBarrier
