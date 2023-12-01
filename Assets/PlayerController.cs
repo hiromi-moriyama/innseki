@@ -142,13 +142,13 @@ public class BarrierScript : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        // Check if the colliding object is on a layer that the barrier should affect
-        if (playerController.barrierLayer == (playerController.barrierLayer | (1 << other.gameObject.layer)) &&
-            other.gameObject.layer != LayerMask.NameToLayer("PlayerIgnoreBarrier"))
+        // Check if the colliding object is on the default layer (layer 0) and not the player
+        if (other.gameObject.layer == 0 && !other.CompareTag("Player"))
         {
             Destroy(other.gameObject);
         }
     }
+
 
     IEnumerator DisableBarrier()
     {

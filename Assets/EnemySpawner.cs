@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private float spawnRate = 1f;
-    [SerializeField] private GameObject[] enemyPrefab;
+    [SerializeField] private GameObject[] asteroidPrefabs;
     [SerializeField] private bool canSpawn = true;
 
     private void Start()
@@ -21,12 +21,12 @@ public class EnemySpawner : MonoBehaviour
         {
             yield return wait;
 
-            if (enemyPrefab.Length > 0)
+            if (asteroidPrefabs.Length > 0)
             {
-                int rand = Random.Range(0, enemyPrefab.Length);
-                GameObject enemyToSpawn = enemyPrefab[rand];
+                int rand = Random.Range(0, asteroidPrefabs.Length);
+                GameObject asteroidToSpawn = asteroidPrefabs[rand];
 
-                Instantiate(enemyToSpawn, transform.position, Quaternion.identity);
+                Instantiate(asteroidToSpawn, transform.position, Quaternion.identity);
             }
         }
     }
