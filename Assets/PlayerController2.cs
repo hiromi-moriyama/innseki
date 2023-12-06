@@ -20,8 +20,8 @@ public class PlayerController2 : MonoBehaviour
     {
         movementDirection.x = Input.GetAxisRaw("Horizontal");
         movementDirection.y = Input.GetAxisRaw("Vertical");
-        animator.SetFloat("Horizontal", movementDirection.x);
-        animator.SetFloat("Vertical", movementDirection.y);
+        //animator.SetFloat("Horizontal", movementDirection.x);
+        //animator.SetFloat("Vertical", movementDirection.y);
     }
 
     void FixedUpdate()
