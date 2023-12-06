@@ -38,9 +38,6 @@ public class PlayerController : MonoBehaviour
     {
         // Allow movement in all scenes
         movementDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-
-        // Check if the current scene is scene index 4
-        if (SceneManager.GetActiveScene().buildIndex == 4)
         {
             // Allow skill usage only in scene index 4
             if (CanDash && Input.GetKeyDown(dashKey))
@@ -62,9 +59,6 @@ public class PlayerController : MonoBehaviour
 
     void Dash()
     {
-        // Check if the current scene is scene index 4 before dashing
-        if (SceneManager.GetActiveScene().buildIndex == 4)
-        {
             // Calculate the dash direction based on the player's input direction
             Vector3 dashDirection = movementDirection.normalized;
 
@@ -73,14 +67,10 @@ public class PlayerController : MonoBehaviour
 
             // Disable the ability for a short duration (dashCooldown)
             StartCoroutine(DisableDash());
-        }
     }
 
     void UseBarrier()
     {
-        // Check if the current scene is scene index 4 before using the barrier
-        if (SceneManager.GetActiveScene().buildIndex == 4)
-        {
             // Create the barrier as a child of the player
             Vector3 barrierOffset = new Vector3(0f, 1.5f, 0f);
 
@@ -100,7 +90,6 @@ public class PlayerController : MonoBehaviour
 
             // Disable the ability for a short duration (barrierCooldown)
             StartCoroutine(DisableBarrier(barrier));
-        }
     }
 
     IEnumerator DisableDash()

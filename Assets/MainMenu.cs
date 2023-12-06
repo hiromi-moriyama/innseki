@@ -5,24 +5,46 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public string Stage_1;
+    public string Stage_2;
+    public string Stage_3;
+    public string Challenge;
+    public string StageSelect;
+
 
     public void Mainmenu()
     {
         SceneManager.LoadScene(1);
     }
-    public void StageSelect()
+    public void Stage()
     {
-        SceneManager.LoadSceneAsync(2);
+        SceneManager.LoadSceneAsync(StageSelect);
     }
 
     public void Stage1()
     {
-        SceneManager.LoadSceneAsync(3);
+        SceneManager.LoadScene(Stage_1);
+    }
+
+    public void Stage2()
+    {
+        if (PlayerAttributes.stage1 == true)
+        {
+            SceneManager.LoadScene(Stage_2);
+        }
+    }
+
+    public void Stage3()
+    {
+        if (PlayerAttributes.stage2 == true)
+        {
+            SceneManager.LoadScene(Stage_3);
+        }
     }
     public void ChallengePlay()
     {
-        SceneManager.LoadSceneAsync(4);
+        if(PlayerAttributes.stage1 == true & PlayerAttributes.stage2 == true & PlayerAttributes.stage3 == true)
+        SceneManager.LoadScene(Challenge);
     }
 
     

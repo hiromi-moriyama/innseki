@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class enemySlime : MonoBehaviour
 {
     public float moveSpeed = 2f; // Speed at which the slime moves
     private bool moveRight = true; // Determines the initial direction
+    public string scenename;
 
     private Animator animator; // Reference to the Animator component
 
@@ -41,5 +43,20 @@ public class enemySlime : MonoBehaviour
             moveRight = true;
         }
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            // Debug log to verify item pickup
+            Debug.Log("Item picked up!");
+
+            // Destroy the item
+            Destroy(gameObject);
+
+            // Load the next scene
+            SceneManager.LoadScene(scenename);
+        }
     }
 }

@@ -16,6 +16,7 @@ public class DashSkill : MonoBehaviour
 
             // Destroy the item
             Destroy(gameObject);
+            PlayerAttributes.stage1 = true;
 
             // Load the next scene
             SceneManager.LoadSceneAsync(1);
