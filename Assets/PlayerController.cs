@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     public float barrierCooldown = 5f; // Adjust the cooldown duration as needed
     public LayerMask barrierLayer; // Set this in the inspector to the layers you want the barrier to affect
     public GameObject barrierPrefab; // Drag and drop a circle sprite prefab for the barrier
+    private Camera _camera;
 
     // Speed variable
     public float speed = 2f;
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        _camera = Camera.main;
     }
 
     void Update()
@@ -39,7 +41,6 @@ public class PlayerController : MonoBehaviour
         // Allow movement in all scenes
         movementDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         {
-            // Allow skill usage only in scene index 4
             if (CanDash && Input.GetKeyDown(dashKey))
             {
                 Dash();
@@ -55,6 +56,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         rb.velocity = movementDirection.normalized * speed;
+        PreventPlayerOffScreen();
     }
 
     void Dash()
@@ -118,6 +120,20 @@ public class PlayerController : MonoBehaviour
 
         // Reset the barrier ability after the cooldown
         CanUseBarrier = true;
+    }
+
+    private void PreventPlayerOffScreen()
+    {
+        Vector2 screenPosition = _camera.WorldToScreenPoint(transform.position);
+        if((screenPosition.x < 0 && rb.velocity.x < 0) || (screenPosition.x > _camera.pixelWidth && rb.velocity.x > 0))
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+        }
+
+        if ((screenPosition.y < 0 && rb.velocity.y < 0) || (screenPosition.y > _camera.pixelWidth && rb.velocity.y > 0))
+        {
+            rb.velocity = new Vector2(rb.velocity.y, 0);
+        }
     }
 
 }
